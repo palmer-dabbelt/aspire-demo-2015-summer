@@ -36,7 +36,7 @@ int main() {
     }
   }
 
-  int gpu = 1;  // set to 0 to use CPU
+  int gpu = 0;  // set to 0 to use CPU
   err = clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
   if (err != CL_SUCCESS) {
     printf("Error: Failed to create a device group!\n");
