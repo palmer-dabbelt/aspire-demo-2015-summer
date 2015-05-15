@@ -11,4 +11,4 @@ OPENCL_FLAG = -lOpenCL
 endif
 
 main: main.c
-		${CC} -std=c99 -o main main.c ${OPENCL_FLAG}
+		gcc -std=c11 -o main main.c ${OPENCL_FLAG}

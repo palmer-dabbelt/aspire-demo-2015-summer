@@ -35,9 +35,16 @@ int main() {
       input[i][j] = rand() / (float) RAND_MAX;
     }
   }
+  
+  cl_platform_id platforms[1];
+  err = clGetPlatformIDs(1, platforms, NULL);
+  if (err != CL_SUCCESS) {
+    printf("Error: Failed to get platform!\n");
+    return EXIT_FAILURE;
+  }
 
-  int gpu = 0;  // set to 0 to use CPU
-  err = clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
+  int gpu = 1;  // set to 0 to use CPU
+  err = clGetDeviceIDs(platforms[0], gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
   if (err != CL_SUCCESS) {
     printf("Error: Failed to create a device group!\n");
     return EXIT_FAILURE;
