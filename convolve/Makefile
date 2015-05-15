@@ -1,3 +1,5 @@
+C_INCLUDE_PATH=/usr/local/cuda/include
+
 CC=gcc
 
 ifeq "$(PLATFORM)" ""
@@ -7,7 +9,7 @@ endif
 ifeq "$(PLATFORM)" "Darwin"
 OPENCL_FLAG = -framework OpenCL
 else
-OPENCL_FLAG = -lOpenCL
+OPENCL_FLAG = -lOpenCL -I${C_INCLUDE_PATH}
 endif
 
 main: main.c
