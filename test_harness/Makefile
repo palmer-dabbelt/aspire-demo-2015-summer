@@ -11,7 +11,7 @@ OPENCL_FLAG = -lOpenCL
 endif
 
 main: main.c
-		$(CC) -std=c99 -o main main.c ${OPENCL_FLAG} -lm
+		$(CC) -std=c99 -I/usr/local/cuda/include -o main main.c ${OPENCL_FLAG} -lm
 
 clean:
 		rm -f main
