@@ -39,8 +39,8 @@ void fn_1(float* Ix, float* denom, float* Iy, float* im1, float* It, float* im0)
         accum += 0.0833333333333f * im1[y * 16 + min(x + 2, 16 - 1)];
         Ix[index] = accum;
     }
-    _hm_generated_1 = pow(Iy[index], 2);
-    _hm_generated_2 = pow(Ix[index], 2);
+    _hm_generated_1 = powf(Iy[index], 2);
+    _hm_generated_2 = powf(Ix[index], 2);
     _hm_generated_0 = _hm_generated_2 + _hm_generated_1;
     denom[index] = _hm_generated_0 + 900.0;
 
@@ -161,8 +161,15 @@ int main() {
       v[i] = rand() / (float) RAND_MAX;
   }
 
+  cl_platform_id platforms[1];
+  err = clGetPlatformIDs(1, platforms, NULL);
+  if (err != CL_SUCCESS) {
+    printf("Error: Failed to get platform!\n");
+    return EXIT_FAILURE;
+  }
+
   int gpu = 1;  // set to 0 to use CPU
-  err = clGetDeviceIDs(NULL, gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
+  err = clGetDeviceIDs(platforms[0], gpu ? CL_DEVICE_TYPE_GPU : CL_DEVICE_TYPE_CPU, 1, &device_id, NULL);
   if (err != CL_SUCCESS) {
     printf("Error: Failed to create a device group!\n");
     return EXIT_FAILURE;
