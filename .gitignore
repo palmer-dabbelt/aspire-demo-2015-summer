@@ -1,1 +1,4 @@
-main
+/Makefile
+/bin
+/lib
+/obj

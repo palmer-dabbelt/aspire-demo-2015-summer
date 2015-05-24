@@ -1,0 +1,11 @@
+LANGUAGES   += c++
+COMPILEOPTS += -std=c++11
+COMPILEOPTS += -pedantic
+COMPILEOPTS += -Wall
+COMPILEOPTS += -Wextra
+COMPILEOPTS += -Werror
+
+BINARIES    += seek-view
+COMPILEOPTS += `ppkg-config seek --cflags`
+LINKOPTS    += `ppkg-config seek --libs`
+SOURCES     += seek-view.c++
