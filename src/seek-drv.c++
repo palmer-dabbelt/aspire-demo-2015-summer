@@ -18,8 +18,10 @@ int main(int argc __attribute__((unused)),
     auto cold = read_calibration_file("share/seek/cold.raw");
     auto hot  = read_calibration_file("share/seek/hot.raw");
 
-    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray16le", "w");
+    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray", "w");
     setbuf(ffplay, NULL);
+
+    setbuf(stdout, NULL);
 
     LibSeek::Imager interface;
     interface.init();
@@ -29,7 +31,7 @@ int main(int argc __attribute__((unused)),
     if ((frame.width() != 208) || (frame.height() != 156))
         abort();
         
-    auto image = std::vector<uint16_t>(208 * 156);
+    auto image = std::vector<uint8_t>(208 * 156);
 
     while (true) {
         interface.frame_acquire(frame);
@@ -41,13 +43,18 @@ int main(int argc __attribute__((unused)),
             auto scaled = (float)(frame.data()[i] - min) / (max - min);
             if (scaled > 1.0) scaled = 1.0;
             if (scaled < 0.0) scaled = 0.0;
-            image[i] = ((1 << 16) - 1) * scaled;
+            image[i] = ((1 << 8) - 1) * scaled;
         }
 
         fwrite(image.data(),
                sizeof(*(image.data())) * frame.width() * frame.height(),
                1,
                ffplay);
+
+        fwrite(image.data(),
+               sizeof(*(image.data())) * frame.width() * frame.height(),
+               1,
+               stdout);
     }
     pclose(ffplay);
 
