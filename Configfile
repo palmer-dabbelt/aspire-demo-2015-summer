@@ -5,6 +5,9 @@ COMPILEOPTS += -Wall
 COMPILEOPTS += -Wextra
 COMPILEOPTS += -Werror
 
+LANGUAGES   += c++
+COMPILEOPTS += -Isrc
+
 LANGUAGES   += bash
 
 GENERATE    += generate-calibration.h++
@@ -40,6 +43,25 @@ SOURCES     += seek-flat.c++
 BINARIES    += seek-compute
 SOURCES     += seek-compute.c++
 
-# Runs colorspace conversion tests
-LIBEXECS    += seek/colorspace-tests
-SOURCES     += colorspace-tests.c++
+# A colorspace conversion library, which is just a header file, along
+# with some test cases for that library.
+LIBRARIES   += libcolorspace.so
+SOURCES     += colorspace.c++
+
+# FIXME: pconfigure doesn't appear to handle C++ test harnesses
+# correctly, this should be fixed but isn't a demo priority...
+TESTS       += hsv2rgb
+DEPLIBS     += colorspace
+SOURCES     += hsv2rgb.c++
+
+TESTS       += rgb2hsv
+DEPLIBS     += colorspace
+SOURCES     += rgb2hsv.c++
+
+TESTS       += rgbloop
+DEPLIBS     += colorspace
+SOURCES     += rgbloop.c++
+
+TESTS       += lambdaloop
+DEPLIBS     += colorspace
+SOURCES     += lambdaloop.c++

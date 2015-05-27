@@ -1,5 +1,6 @@
 /Makefile
 /bin
+/check
 /lib
 /obj
 /libexec

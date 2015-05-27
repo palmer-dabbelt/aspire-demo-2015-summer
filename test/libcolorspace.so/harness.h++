@@ -4,7 +4,7 @@
 #include <stdlib.h>
 
 #define DELTA (1 / 2560.0)
-#undef PRINT_INTERMEDIATE_RESULTS
+#define PRINT_INTERMEDIATE_RESULTS
 
 void test(const pixel_hsv& in, const pixel_rgb32& gold)
 {
@@ -112,72 +112,4 @@ void test(const pixel_hsv& gold, const pixel_hsv& out)
         abort();
     if (fabs(out.v() - gold.v()) > DELTA)
         abort();
-}
-
-int main(...)
-{
-#if 0
-    test(0.0, 0.0, 0.0, 0, 0, 0);
-    test(0.0, 0.0, 100.0, 255, 255, 255);
-    test(0.0, 100.0, 100.0, 255, 0, 0);
-    test(120.0, 100.0, 100.0, 0, 255, 0);
-    test(240.0, 100.0, 100.0, 0, 0, 255);
-    test(60.0, 100.0, 100.0, 255, 255, 0);
-    test(180.0, 100.0, 100.0, 0, 255, 255);
-    test(300.0, 100.0, 100.0, 255, 0, 255);
-    test(0.0, 0.0, 75.0, 191, 191, 191);
-    test(0.0, 0.0, 50.0, 128, 128, 128);
-    test(0.0, 100.0, 50.0, 128, 0, 0);
-    test(60.0, 100.0, 50.0, 128, 128, 0);
-    test(120.0, 100.0, 50.0, 0, 128, 0);
-    test(300.0, 100.0, 50.0, 128, 0, 128);
-    test(180.0, 100.0, 50.0, 0, 128, 128);
-    test(240.0, 100.0, 50.0, 0, 0, 128);
-#endif
-
-#if 0
-    test(0, 0, 0, 0.0, 0.0, 0.0);
-    test(255, 255, 255, 0.0, 0.0, 100.0);
-    test(255, 0, 0, 0.0, 100.0, 100.0);
-    test(0, 255, 0, 120.0, 100.0, 100.0);
-    test(0, 0, 255, 240.0, 100.0, 100.0);
-    test(255, 255, 0, 60.0, 100.0, 100.0);
-    test(0, 255, 255, 180.0, 100.0, 100.0);
-    test(255, 0, 255, 300.0, 100.0, 100.0);
-    test(192, 192, 192, 0.0, 0.0, 75.294118);
-    test(128, 128, 128, 0.0, 0.0, 50.196078);
-    test(128, 0, 0, 0.0, 100.0, 50.196078);
-    test(128, 128, 0, 60.0, 100.0, 50.196078);
-    test(0, 128, 0, 120.0, 100.0, 50.196078);
-    test(128, 0, 128, 300.0, 100.0, 50.196078);
-    test(0, 128, 128, 180.0, 100.0, 50.196078);
-    test(0, 0, 128, 240.0, 100.0, 50.196078);
-#endif
-
-#if 0
-    for (size_t r = 0; r <= 255; ++r) {
-        for (size_t g = 0; g <= 255; ++g) {
-            for (size_t b = 0; b <= 255; ++b) {
-                test(r, g, b);
-            }
-        }
-    }
-#endif
-
-    for (size_t i = 0; i <= 255; ++i) {
-        double lambda = i / 255.0;
-
-        auto hi = pixel_rgb32(255, 255, 255);
-        pixel_hsv hi_hsv = hi;
-        pixel_hsv mul = hi_hsv * lambda;
-        pixel_rgb32 mul_rgb = mul;
-
-#ifdef PRINT_INTERMEDIATE_RESULTS
-        fprintf(stderr, "(%f, %f, %f)*%f => (%f, %f, %f)\n",
-                hi_hsv.h(), hi_hsv.s(), hi_hsv.v(), lambda,
-                mul.h(), mul.s(), mul.v());
-#endif
-
-        test(mul_rgb, pixel_rgb32(i, i, i));
-    }
 }
