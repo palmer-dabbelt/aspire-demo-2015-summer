@@ -30,6 +30,10 @@ COMPILEOPTS += `ppkg-config seek --cflags`
 LINKOPTS    += `ppkg-config seek --libs`
 SOURCES     += seek-drv.c++
 
+# Flat-field correction
+BINARIES    += seek-flat
+SOURCES     += seek-flat.c++
+
 # Performs the actual computation on an input stream from stdin.
 BINARIES    += seek-compute
 SOURCES     += seek-compute.c++
