@@ -5,10 +5,16 @@ COMPILEOPTS += -Wall
 COMPILEOPTS += -Wextra
 COMPILEOPTS += -Werror
 
+LANGUAGES   += bash
+
 BINARIES    += seek-view
 COMPILEOPTS += `ppkg-config seek --cflags`
 LINKOPTS    += `ppkg-config seek --libs`
 SOURCES     += seek-view.c++
+
+# Runs all the code
+BINARIES    += seek-run
+SOURCES     += run.bash
 
 # Seek Thermal calibration software, which outputs a calibration image
 # after letting the camera run for a while.
