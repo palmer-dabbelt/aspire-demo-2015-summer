@@ -6,18 +6,18 @@
 #include <vector>
 #include <assert.h>
 
+#include "generate-calibration.h++"
+
 #ifndef CALIBRATE_MAX
 #define CALIBRATE_MAX 0x8200
 #define CALIBRATE_MIN 0x7e00
 #endif
 
-static std::vector<uint16_t> read_calibration_file(const std::string& filename);
-
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
 {
-    auto cold = read_calibration_file("share/seek/cold.raw");
-    auto hot  = read_calibration_file("share/seek/hot.raw");
+    auto cold = generate_calibration::cold;
+    auto hot  = generate_calibration::hot;
 
     auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray -loglevel quiet", "w");
     setbuf(ffplay, NULL);
@@ -58,16 +58,4 @@ int main(int argc __attribute__((unused)),
     pclose(ffplay);
 
     return 0;
-}
-
-std::vector<uint16_t> read_calibration_file(const std::string& filename)
-{
-    auto file = fopen(filename.c_str(), "rb");
-    auto out = std::vector<uint16_t>(208 * 156);
-    fread(out.data(),
-          sizeof(*(out.data())) * 208 * 156,
-          1,
-          file);
-    fclose(file);
-    return out;
 }

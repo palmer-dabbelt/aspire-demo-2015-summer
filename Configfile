@@ -7,6 +7,8 @@ COMPILEOPTS += -Werror
 
 LANGUAGES   += bash
 
+GENERATE    += generate-calibration.h++
+
 BINARIES    += seek-view
 COMPILEOPTS += `ppkg-config seek --cflags`
 LINKOPTS    += `ppkg-config seek --libs`
