@@ -23,3 +23,11 @@ BINARIES    += seek-drv
 COMPILEOPTS += `ppkg-config seek --cflags`
 LINKOPTS    += `ppkg-config seek --libs`
 SOURCES     += seek-drv.c++
+
+# Performs the actual computation on an input stream from stdin.
+BINARIES    += seek-compute
+SOURCES     += seek-compute.c++
+
+# Runs colorspace conversion tests
+LIBEXECS    += seek/colorspace-tests
+SOURCES     += colorspace-tests.c++
