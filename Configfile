@@ -35,6 +35,11 @@ COMPILEOPTS += `ppkg-config seek --cflags`
 LINKOPTS    += `ppkg-config seek --libs`
 SOURCES     += seek-drv.c++
 
+# A dummy Seek Thermal driver, which outputs some fake data that kind
+# of looks a bit like what is actually expected to be camera output
+BINARIES    += seek-dummy
+SOURCES     += seek-dummy.c++
+
 # Flat-field correction
 BINARIES    += seek-flat
 SOURCES     += seek-flat.c++
