@@ -12,7 +12,7 @@ static pixel_rgb32 rainbow(uint8_t input);
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
 {
-    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format bgra", "w");
+    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format bgra -loglevel quiet", "w");
     setbuf(ffplay, NULL);
 
     setbuf(stdin, NULL);

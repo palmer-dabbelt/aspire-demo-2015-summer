@@ -19,7 +19,7 @@ int main(int argc __attribute__((unused)),
     auto cold = read_calibration_file("share/seek/cold.raw");
     auto hot  = read_calibration_file("share/seek/hot.raw");
 
-    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray", "w");
+    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray -loglevel quiet", "w");
     setbuf(ffplay, NULL);
 
     setbuf(stdout, NULL);
