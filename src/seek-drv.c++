@@ -1,13 +1,17 @@
 /* Copyright 2015 Palmer Dabbelt <palmer@dabbelt.com> */
 
 #include <stdio.h>
-#include <seek.hpp>
 #include <stdint.h>
 #include <vector>
+
+#ifdef HAVE_SEEK
+#include <seek.hpp>
+#endif
 
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
 {
+#ifdef HAVE_SEEK
     setbuf(stdout, NULL);
 
     LibSeek::Imager interface;
@@ -26,6 +30,7 @@ int main(int argc __attribute__((unused)),
                1,
                stdout);
     }
+#endif
 
     return 0;
 }

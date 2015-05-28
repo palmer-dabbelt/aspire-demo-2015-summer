@@ -1,8 +1,11 @@
 /* Copyright 2015 Palmer Dabbelt <palmer@dabbelt.com> */
 
 #include <stdio.h>
-#include <seek.hpp>
 #include <stdint.h>
+
+#ifdef HAVE_SEEK
+#include <seek.hpp>
+#endif
 
 #ifndef WARMUP_COUNT
 #define WARMUP_COUNT 200
@@ -11,6 +14,7 @@
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
 {
+#ifdef HAVE_SEEK
     auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray16le", "w");
     setbuf(ffplay, NULL);
 
@@ -37,6 +41,7 @@ int main(int argc __attribute__((unused)),
            1,
            out);
     fclose(out);
+#endif
 
     return 0;
 }

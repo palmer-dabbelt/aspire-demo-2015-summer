@@ -24,15 +24,15 @@ SOURCES     += run.bash
 # Seek Thermal calibration software, which outputs a calibration image
 # after letting the camera run for a while.
 BINARIES    += seek-calibrate
-COMPILEOPTS += `ppkg-config seek --cflags`
-LINKOPTS    += `ppkg-config seek --libs`
+COMPILEOPTS += `ppkg-config --optional --have SEEK seek --cflags`
+LINKOPTS    += `ppkg-config --optional --have SEEK seek --libs`
 SOURCES     += seek-calibrate.c++
 
 # A simple Seek Thermal driver, which just streams frame data to
 # stdout.
 BINARIES    += seek-drv
-COMPILEOPTS += `ppkg-config seek --cflags`
-LINKOPTS    += `ppkg-config seek --libs`
+COMPILEOPTS += `ppkg-config --optional --have SEEK seek --cflags`
+LINKOPTS    += `ppkg-config --optional --have SEEK seek --libs`
 SOURCES     += seek-drv.c++
 
 # A dummy Seek Thermal driver, which outputs some fake data that kind
