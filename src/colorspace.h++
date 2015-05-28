@@ -23,7 +23,7 @@ private:
     uint8_t _b;
     uint8_t _g;
     uint8_t _r;
-    uint8_t _padding;
+    uint8_t _padding __attribute__((unused));
 
 public:
     pixel_rgb32(void)
