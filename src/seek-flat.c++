@@ -7,6 +7,7 @@
 #include <assert.h>
 
 #include "generate-calibration.h++"
+#include "util.h++"
 
 #ifndef CALIBRATE_MAX
 #define CALIBRATE_MAX 0x8200
@@ -29,10 +30,9 @@ int main(int argc __attribute__((unused)),
     auto flat = std::vector<uint8_t>(208 * 156);
 
     while (true) {
-        fread(raw.data(),
-              sizeof(*(raw.data())) * raw.size(),
-              1,
-              stdin);
+        freadall(raw.data(),
+                 sizeof(*(raw.data())) * raw.size(),
+                 stdin);
 
         assert(raw.size() == flat.size());
         for (size_t i = 0; i < raw.size(); ++i) {
@@ -45,15 +45,13 @@ int main(int argc __attribute__((unused)),
             flat[i] = ((1 << 8) - 1) * scaled;
         }
 
-        fwrite(flat.data(),
-               sizeof(*(flat.data())) * flat.size(),
-               1,
-               ffplay);
+        fwriteall(flat.data(),
+                  sizeof(*(flat.data())) * flat.size(),
+                  ffplay);
 
-        fwrite(flat.data(),
-               sizeof(*(flat.data())) * flat.size(),
-               1,
-               stdout);
+        fwriteall(flat.data(),
+                  sizeof(*(flat.data())) * flat.size(),
+                  stdout);
     }
     pclose(ffplay);
 

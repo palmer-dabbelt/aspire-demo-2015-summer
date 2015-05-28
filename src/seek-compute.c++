@@ -6,6 +6,7 @@
 #include <assert.h>
 
 #include "colorspace.h++"
+#include "util.h++"
 
 static pixel_rgb32 rainbow(uint8_t input);
 
@@ -21,20 +22,18 @@ int main(int argc __attribute__((unused)),
     auto color = std::vector<pixel_rgb32>(208 * 156);
 
     while (true) {
-        fread(ir.data(),
-              sizeof(*(ir.data())) * ir.size(),
-              1,
-              stdin);
+        freadall(ir.data(),
+                 sizeof(*(ir.data())) * ir.size(),
+                 stdin);
 
         assert(ir.size() == color.size());
         for (size_t i = 0; i < ir.size(); ++i) {
             color[i] = rainbow(ir[i]);
         }
 
-        fwrite(color.data(),
-               sizeof(*(color.data())) * color.size(),
-               1,
-               ffplay);
+        fwriteall(color.data(),
+                  sizeof(*(color.data())) * color.size(),
+                  ffplay);
     }
     pclose(ffplay);
 

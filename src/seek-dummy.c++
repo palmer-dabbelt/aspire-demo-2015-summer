@@ -8,6 +8,7 @@
 #include <random>
 
 #include "generate-calibration.h++"
+#include "util.h++"
 
 #define PROB_NUM 1
 #define PROB_DENOM 75
@@ -155,10 +156,9 @@ int main(int argc __attribute__((unused)),
             raw[i] = (scaled * (max - min)) + min;
         }
 
-        fwrite(raw.data(),
-               sizeof(*(raw.data())) * raw.size(),
-               1,
-               stdout);
+        fwriteall(raw.data(),
+                  sizeof(*(raw.data())) * raw.size(),
+                  stdout);
     }
 
     return 0;
