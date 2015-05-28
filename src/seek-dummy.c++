@@ -50,14 +50,14 @@ int main(int argc __attribute__((unused)),
     while (true) {
         /* Randomly perturb the edge of the image to produce the image
          * on the next frame. */
-        for (size_t i = 0; i < flat.size(); ++i) {
+        for (ssize_t i = 0; i < (ssize_t)(flat.size()); ++i) {
             auto x = i % 208;
             auto y = i / 208;
 
             if (change_prob(generator) <= CHANGE_NUM)
                 flat[i] += change_distrib(generator);
 
-            if ((x == 0) || (x == 207) || (y == 0) || (y == 155))
+            if ((x <= 1) || (x >= 206) || (y <= 1) || (y >= 154))
                 continue;
 
             /* Compute a gradient to check and see if we're in an
@@ -81,15 +81,19 @@ int main(int argc __attribute__((unused)),
                 else
                     copy = flat[i-208];
 
-            for (auto dy = -MOVE_RADIUS; dy <= MOVE_RADIUS; ++dy)
-                for (auto dx = -MOVE_RADIUS; dx <= MOVE_RADIUS; ++dx)
+            for (auto dy = -MOVE_RADIUS; dy <= MOVE_RADIUS; ++dy) {
+                for (auto dx = -MOVE_RADIUS; dx <= MOVE_RADIUS; ++dx) {
+                    if ((y+dy < 0) || (y+dy >= 154) || (x+dx < 0) || (x+dx >= 208))
+                        continue;
+
                     flat[(y+dy)*208 + (x+dx)] = copy;
-                
+                }
+            }
         }
 
         /* Apply a smoothing filter to try and make the edges not
          * super random looking. */
-        for (size_t i = 0; i < flat.size(); ++i) {
+        for (ssize_t i = 0; i < (ssize_t)flat.size(); ++i) {
             auto x = i % 208;
             auto y = i / 208;
 
@@ -99,6 +103,9 @@ int main(int argc __attribute__((unused)),
             auto lo_sum = 0;
             for (auto dy = -SMOOTH_RADIUS; dy <= SMOOTH_RADIUS; ++dy) {
                 for (auto dx = -SMOOTH_RADIUS; dx <= SMOOTH_RADIUS; ++dx) {
+                    if ((y+dy < 0) || (y+dy >= 154) || (x+dx < 0) || (x+dx >= 208))
+                        continue;
+
                     if (flat[(y+dy)*208 + (x+dx)] > 127) {
                         hi_count++;
                         hi_sum += flat[(y+dy)*208 + (x+dx)];
@@ -112,6 +119,9 @@ int main(int argc __attribute__((unused)),
             if (hi_count > 3*lo_count) {
                 for (auto dy = -SMOOTH_RADIUS; dy <= SMOOTH_RADIUS; ++dy) {
                     for (auto dx = -SMOOTH_RADIUS; dx <= SMOOTH_RADIUS; ++dx) {
+                        if ((y+dy < 0) || (y+dy >= 154) || (x+dx < 0) || (x+dx >= 208))
+                            continue;
+
                         if (flat[(y+dy)*208 + (x+dx)] > 127) {
                         } else {
                             flat[i] = hi_sum / hi_count;
@@ -123,6 +133,9 @@ int main(int argc __attribute__((unused)),
             if (lo_count > 3*hi_count) {
                 for (auto dy = -SMOOTH_RADIUS; dy <= SMOOTH_RADIUS; ++dy) {
                     for (auto dx = -SMOOTH_RADIUS; dx <= SMOOTH_RADIUS; ++dx) {
+                        if ((y+dy < 0) || (y+dy >= 154) || (x+dx < 0) || (x+dx >= 208))
+                            continue;
+
                         if (flat[(y+dy)*208 + (x+dx)] > 127) {
                             flat[i] = lo_sum / lo_count;
                         } else {
