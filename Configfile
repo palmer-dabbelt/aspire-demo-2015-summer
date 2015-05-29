@@ -37,10 +37,12 @@ SOURCES     += seek-dummy.c++
 
 # Flat-field correction
 BINARIES    += seek-flat
+CONFIG      += have_ffplay
 SOURCES     += seek-flat.c++
 
 # Performs the actual computation on an input stream from stdin.
 BINARIES    += seek-compute
+CONFIG      += have_ffplay
 SOURCES     += seek-compute.c++
 
 # A colorspace conversion library, which is just a header file, along

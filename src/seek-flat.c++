@@ -19,8 +19,11 @@ int main(int argc __attribute__((unused)),
     auto cold = generate_calibration::cold;
     auto hot  = generate_calibration::hot;
 
+#ifdef HAVE_FFPLAY
     auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray -loglevel quiet", "w");
     setbuf(ffplay, NULL);
+#endif
+
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
 
@@ -43,15 +46,20 @@ int main(int argc __attribute__((unused)),
             flat[i] = ((1 << 8) - 1) * scaled;
         }
 
+#ifdef HAVE_FFPLAY
         fwriteall(flat.data(),
                   sizeof(*(flat.data())) * flat.size(),
                   ffplay);
+#endif
 
         fwriteall(flat.data(),
                   sizeof(*(flat.data())) * flat.size(),
                   stdout);
     }
+
+#ifdef HAVE_FFPLAY
     pclose(ffplay);
+#endif
 
     return 0;
 }
