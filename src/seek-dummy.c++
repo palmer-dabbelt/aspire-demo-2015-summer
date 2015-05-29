@@ -1,7 +1,6 @@
 /* Copyright 2015 Palmer Dabbelt <palmer@dabbelt.com> */
 
 #include <stdio.h>
-#include <seek.hpp>
 #include <stdint.h>
 #include <vector>
 #include <assert.h>

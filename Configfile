@@ -12,11 +12,6 @@ LANGUAGES   += bash
 
 GENERATE    += generate-calibration.h++
 
-BINARIES    += seek-view
-COMPILEOPTS += `ppkg-config seek --cflags`
-LINKOPTS    += `ppkg-config seek --libs`
-SOURCES     += seek-view.c++
-
 # Runs all the code
 BINARIES    += seek-run
 SOURCES     += run.bash

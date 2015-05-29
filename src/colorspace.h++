@@ -2,6 +2,7 @@
 #define COLORSPACE_HXX
 
 #include <stdint.h>
+#include <stdlib.h>
 #include <algorithm>
 #include <cmath>
 

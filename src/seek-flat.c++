@@ -1,7 +1,6 @@
 /* Copyright 2015 Palmer Dabbelt <palmer@dabbelt.com> */
 
 #include <stdio.h>
-#include <seek.hpp>
 #include <stdint.h>
 #include <vector>
 #include <assert.h>
@@ -22,7 +21,6 @@ int main(int argc __attribute__((unused)),
 
     auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray -loglevel quiet", "w");
     setbuf(ffplay, NULL);
-
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
 
