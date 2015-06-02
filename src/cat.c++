@@ -6,7 +6,7 @@
 #include "util.h++"
 
 #ifndef BUFFER_SIZE
-#define BUFFER_SIZE (1024*1024)
+#define BUFFER_SIZE 1024
 #endif
 
 int main(...) {
@@ -15,5 +15,4 @@ int main(...) {
         freadall (buffer, BUFFER_SIZE, stdin );
         fwriteall(buffer, BUFFER_SIZE, stdout);
     }
-        
 }
