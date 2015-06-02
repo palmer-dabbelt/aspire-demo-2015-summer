@@ -70,5 +70,9 @@ SOURCES     += lambdaloop.c++
 
 # Cross-compile some set of stuff for RISC-V
 CONFIG       += riscv_cross
+
 BINARIES     += riscv-flat
 SOURCES      += seek-flat.c++
+
+BINARIES     += riscv-cat
+SOURCES      += cat.c++
