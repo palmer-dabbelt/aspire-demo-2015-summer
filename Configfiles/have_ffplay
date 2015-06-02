@@ -3,6 +3,8 @@
 ffplay="$(which ffplay 2> /dev/null)"
 if [[ "$ffplay" != "" ]]
 then
-    echo "-DHAVE_FFPLAY"
-    echo "-DWITH_FFPLAY=\"${ffplay}\""
+    cat <<EOF
+COMPILEOPTS += -DHAVE_FFPLAY
+COMPILEOPTS += -DWITH_FFPLAY=\"${ffplay}\"
+EOF
 fi
