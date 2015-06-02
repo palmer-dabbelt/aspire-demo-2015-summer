@@ -20,7 +20,7 @@ cat <<EOF
 EOF
 
 cat <<EOF
-   std::vector<uint16_t> hot {
+   uint16_t hot[] = {
 EOF
 
   od -t x share/seek/hot.raw  | cut -d' ' -f 2- | sed 's/ /\n/'g | sed 's/\(....\)/\0\n/g' | grep -v '^$' | sed 's/\(.*\)/0x\0,/'
@@ -30,7 +30,7 @@ cat <<EOF
 EOF
 
 cat <<EOF
-   std::vector<uint16_t> cold {
+   uint16_t cold[] = {
 EOF
 
   od -t x share/seek/cold.raw  | cut -d' ' -f 2- | sed 's/ /\n/'g | sed 's/\(....\)/\0\n/g' | grep -v '^$' | sed 's/\(.*\)/0x\0,/'
