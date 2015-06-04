@@ -6,6 +6,9 @@ COMPILEOPTS += -Wextra
 COMPILEOPTS += -Werror
 
 LANGUAGES   += c++
+COMPILEOPTS += -O3
+
+LANGUAGES   += c++
 COMPILEOPTS += -Isrc
 
 LANGUAGES   += bash
@@ -76,3 +79,6 @@ SOURCES      += seek-flat.c++
 
 BINARIES     += riscv-cat
 SOURCES      += cat.c++
+
+BINARIES     += riscv-hello
+SOURCES      += hello.c++
