@@ -82,3 +82,7 @@ SOURCES      += cat.c++
 
 BINARIES     += riscv-hello
 SOURCES      += hello.c++
+
+CONFIG      += riscv_cross_hwacha
+BINARIES    += hwacha-flat
+SOURCES     += seek-flat.c++

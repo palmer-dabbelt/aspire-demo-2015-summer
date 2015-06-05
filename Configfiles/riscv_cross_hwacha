@@ -1,0 +1,15 @@
+#!/bin/bash
+
+cxx="$(which riscv64-unknown-elf-g++ 2> /dev/null)"
+if [[ "$cxx" == "" ]]
+then
+    echo "No RISC-V cross compiler detected, compiling natively" >&2
+    exit 0
+fi
+
+cat <<EOF
+LANGUAGES += c++
+COMPILER = $cxx
+LINKER = $cxx
+COMPILEOPTS += -Wa,-march=RVIMAFDXhwacha -mhwacha4
+EOF
