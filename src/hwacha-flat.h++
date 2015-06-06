@@ -26,7 +26,7 @@ void flatten(uint8_t *flat, uint16_t *raw,
   float one = 1.0f;
   float zero = 0.0f;
   asm volatile (
-  "vsetcfg  8, 1\n"
+  "vsetcfg  9, 1\n"
   "li a5, 208 * 156\n"
   "li a4, ((1 << 8) - 1)\n"
   "fcvt.s.w fa1, a4\n"
@@ -39,20 +39,29 @@ void flatten(uint8_t *flat, uint16_t *raw,
   "lui a4, %%hi(vtcode%=)\n"
   "stripmine%=:\n"
   "vsetvl t0, a5\n"
+  "sb x0, 0(%0)\n"
+  "lhu a6, 0(%1)\n"
+  "lhu a6, 0(%2)\n"
+  "lhu a6, 0(%3)\n"
   "vmsa va0, %0\n"
   "vmsa va1, %1\n"
   "vmsa va2, %2\n"
   "vmsa va3, %3\n"
-  "vf  %%lo(vtcode%=)(a4)\n"
   "slli t1, t0, 1\n"
   "add %0, %0, t0\n"
   "add %1, %1, t1\n"
   "add %2, %2, t1\n"
   "add %3, %3, t1\n"
+  "sb x0, 0(%0)\n"
+  "lhu a6, 0(%1)\n"
+  "lhu a6, 0(%2)\n"
+  "lhu a6, 0(%3)\n"
+  "vf  %%lo(vtcode%=)(a4)\n"
   "sub a5, a5, t0\n"
   "bnez a5, stripmine%=\n"
   "fence\n"
   "j 1f\n"
+  ".align 3\n"
   "vtcode%=:\n"
   "vlhu vv1, va1\n"
   "vlhu vv2, va2\n"
@@ -71,8 +80,9 @@ void flatten(uint8_t *flat, uint16_t *raw,
   "vsb vv8, va0\n"
   "vstop\n"
   "1:\n"
-  : "=r" (flat)
-  : "r" (raw), "r" (hot), "r" (cold), "f" (one), "f" (zero));
+  : "+r" (flat)
+  : "r" (raw), "r" (hot), "r" (cold), "f" (one), "f" (zero)
+  : "a4", "a5", "a6");
 }
 #endif
 #endif
