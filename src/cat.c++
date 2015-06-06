@@ -12,12 +12,19 @@
 #endif
 
 template<class T>
-T *aligned_alloc(size_t alignment, size_t count)
+T *aligned_alloc(size_t alignment, size_t count __attribute__((unused)), T *out)
 {
-    char *out = new char[sizeof(T) * count * 2];
     while ((((uintptr_t)out) % alignment) != 0)
         out++;
     return (T*)out;
+}
+
+
+template<class T>
+T *aligned_alloc(size_t alignment, size_t count)
+{
+    char *out = new char[sizeof(T) * count * 2];
+    return aligned_alloc(alignment, count, out);
 }
 
 #ifdef __riscv_hwacha4
@@ -92,8 +99,10 @@ static void *hwacha_memcpy(void *o, const void *i, size_t n)
 #endif
 
 int main(...) {
-    auto inbuf  = aligned_alloc<char>(8, BUFFER_SIZE);
-    auto outbuf = aligned_alloc<char>(8, BUFFER_SIZE);
+    char inbuf_storage[BUFFER_SIZE*2];
+    char outbuf_storage[BUFFER_SIZE*2];
+    auto inbuf  = aligned_alloc<char>(8, BUFFER_SIZE, &inbuf_storage[0]);
+    auto outbuf = aligned_alloc<char>(8, BUFFER_SIZE, &outbuf_storage[0]);
 
     if ((inbuf == nullptr) || (outbuf == nullptr))
         abort();
