@@ -44,29 +44,30 @@ __asm__ volatile (
 "  vlw vv2, va2\n"
 "  vsub vv3, vv2, vv0\n"
 
+/* vv1:hot[i] */
 /* vv4:scale = hot[i] - cold[i] */
 "  vlw vv1, va1\n"
 "  vsub vv4, vv1, vv0\n"
 
-/* vv3:foffset = offset */
-"  vfcvt.s.w vv3, vv3\n"
+/* vv6:foffset = offset */
+"  vfcvt.s.w vv6, vv3\n"
 
 /* vv4:fscale = scale */
-"  vfcvt.s.w vv4, vv4\n"
+"  vfcvt.s.w vv7, vv4\n"
 
 /* vv5:scaled = foffset / fscale */
-"  vfdiv.s vv5, vv3, vv4\n"
+"  vfdiv.s vv5, vv6, vv7\n"
 
 /* if (scaled < 0.0) vv5:scaled = 1.0 */
-"  vfmax.s vv5, vv5, vs0\n"
+"  vfmax.s vv8, vv5, vs0\n"
 
 /* if (scaled > 1.0) vv5:scaled = 1.0 */
-"  vfmin.s vv5, vv5, vs1\n"
+"  vfmin.s vv9, vv8, vs1\n"
 
 /* flat[i] = ((1 << 8) - 1) * scaled */
-"  vfmul.s vv5, vv5, vs2\n"
-"  vfcvt.w.s vv5, vv5\n"
-"  vsw vv5, va3\n"
+"  vfmul.s vv10, vv9, vs2\n"
+"  vfcvt.w.s vv11, vv10\n"
+"  vsw vv11, va3\n"
 "  vstop\n"
     );
 #endif
@@ -106,7 +107,7 @@ int main(int argc __attribute__((unused)),
     /* We need a single configuration here  */
     size_t vector_length;
     __asm__ volatile (
-        "vsetcfg 8, 1\n"
+        "vsetcfg 16, 1\n"
         "vsetvl %0, %1\n"
         : "=r"(vector_length)
         : "r"(SIZE)
