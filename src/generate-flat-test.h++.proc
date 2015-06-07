@@ -1,0 +1,51 @@
+#!/bin/bash
+
+if [[ "$1" == "--deps" ]]
+then
+    echo "share/seek/flat-single-input.raw"
+    echo "share/seek/flat-single-output.raw"
+    exit 0
+fi
+
+if [[ "$1" == "--generate" ]]
+then
+cat <<EOF
+ #ifndef GENERATE_FLAT_TEST_HXX
+ #define GENERATE_FLAT_TEST_HXX
+
+ #include <stdint.h>
+ #include <vector>
+
+ namespace generate_flat_test {
+EOF
+
+cat <<EOF
+   uint16_t input[208*156] = {
+EOF
+
+  od -v -t x2 share/seek/flat-single-input.raw | grep ' ' | cut -d' ' -f2- | sed 's/ /, 0x/g' | sed 's/$/,/' | sed 's/^/0x/'
+
+cat <<EOF
+   };
+EOF
+
+cat <<EOF
+   uint8_t output[208*156 + 1] = {
+EOF
+
+  od -v -t x1 share/seek/flat-single-output.raw | grep ' ' | cut -d' ' -f2- | sed 's/ /, 0x/g' | sed 's/$/,/' | sed 's/^/0x/'
+
+cat <<EOF
+   };
+EOF
+
+cat <<EOF
+ }
+
+ #endif
+EOF
+    
+    exit 0
+fi
+
+exit 1

@@ -14,6 +14,7 @@ COMPILEOPTS += -Isrc
 LANGUAGES   += bash
 
 GENERATE    += generate-calibration.h++
+GENERATE    += generate-flat-test.h++
 
 # Runs all the code
 BINARIES    += seek-run
@@ -41,6 +42,11 @@ SOURCES     += seek-dummy.c++
 # Flat-field correction
 BINARIES    += seek-flat
 CONFIG      += have_ffplay
+SOURCES     += seek-flat.c++
+
+BINARIES    += seek-testflat
+COMPILEOPTS += -DREAD_FROM_INTERNAL_MEMORY
+COMPILEOPTS += -DWRITE_TO_INTERNAL_MEMORY
 SOURCES     += seek-flat.c++
 
 # Performs the actual computation on an input stream from stdin.
@@ -83,6 +89,7 @@ SOURCES      += cat.c++
 BINARIES     += riscv-hello
 SOURCES      += hello.c++
 
+# Enable Hwacha on even fewer configurations
 CONFIG      += riscv_cross_hwacha
 
 BINARIES    += hwacha-flat

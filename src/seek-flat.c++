@@ -4,8 +4,14 @@
 #include <stdint.h>
 #include <vector>
 #include <assert.h>
+#include <string.h>
 
 #include "generate-calibration.h++"
+
+#if defined(READ_FROM_INTERNAL_MEMORY) || defined(WRITE_TO_INTERNAL_MEMORY)
+#include "generate-flat-test.h++"
+#endif
+
 #include "util.h++"
 
 #ifndef CALIBRATE_MAX
@@ -101,9 +107,13 @@ int main(int argc __attribute__((unused)),
         flat[i] = raw[i] = hot[i] + cold[i];
 
     while (true) {
+#ifdef READ_FROM_INTERNAL_MEMORY
+        memcpy(&raw[0], generate_flat_test::input, SIZE * sizeof(*raw));
+#else
         freadall(&raw[0],
                  SIZE * sizeof(*raw),
                  stdin);
+#endif
 
 #ifdef __riscv_hwacha4
         for (size_t i = 0; i <= SIZE; i += vector_length) {
@@ -183,9 +193,25 @@ int main(int argc __attribute__((unused)),
                   ffplay);
 #endif
 
+#ifdef WRITE_TO_INTERNAL_MEMORY
+        bool matching = true;
+        for (int i = 0; i < SIZE; ++i) {
+            if (flat[i] != generate_flat_test::output[i]) {
+                printf("ERROR: memory doesn't match at %d: %d <> %d\n",
+                       i, flat[i], generate_flat_test::output[i]);
+                matching = false;
+            }
+        }
+
+        if (matching == false)
+            abort();
+        return 0;
+#else
         fwriteall(&flat[0],
                   SIZE * sizeof(*flat),
                   stdout);
+        fflush(stdout);
+#endif
     }
 
 #ifdef HAVE_FFPLAY
