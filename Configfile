@@ -89,6 +89,11 @@ SOURCES      += cat.c++
 BINARIES     += riscv-hello
 SOURCES      += hello.c++
 
+BINARIES     += riscv-testflat
+COMPILEOPTS += -DREAD_FROM_INTERNAL_MEMORY
+COMPILEOPTS += -DWRITE_TO_INTERNAL_MEMORY
+SOURCES     += seek-flat.c++
+
 # Enable Hwacha on even fewer configurations
 CONFIG      += riscv_cross_hwacha
 
@@ -97,3 +102,8 @@ SOURCES     += seek-flat.c++
 
 BINARIES    += hwacha-cat
 SOURCES     += cat.c++
+
+BINARIES     += hwacha-testflat
+COMPILEOPTS += -DREAD_FROM_INTERNAL_MEMORY
+COMPILEOPTS += -DWRITE_TO_INTERNAL_MEMORY
+SOURCES     += seek-flat.c++
