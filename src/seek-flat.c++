@@ -41,31 +41,43 @@ __asm__ volatile (
 /* vv2:cold[i] */
 /* vv3:offset = raw[i] - cold[i] */
 "  vlw vv0, va0\n"
+"  vlw vv0, va0\n"
 "  vlw vv2, va2\n"
+"  vlw vv2, va2\n"
+"  vsub vv3, vv2, vv0\n"
 "  vsub vv3, vv2, vv0\n"
 
 /* vv1:hot[i] */
 /* vv4:scale = hot[i] - cold[i] */
 "  vlw vv1, va1\n"
+"  vlw vv1, va1\n"
+"  vsub vv4, vv1, vv0\n"
 "  vsub vv4, vv1, vv0\n"
 
 /* vv6:foffset = offset */
 "  vfcvt.s.w vv6, vv3\n"
+"  vfcvt.s.w vv6, vv3\n"
 
 /* vv4:fscale = scale */
+"  vfcvt.s.w vv7, vv4\n"
 "  vfcvt.s.w vv7, vv4\n"
 
 /* vv5:scaled = foffset / fscale */
 "  vfdiv.s vv5, vv6, vv7\n"
+"  vfdiv.s vv5, vv6, vv7\n"
 
 /* if (scaled < 0.0) vv5:scaled = 1.0 */
+"  vfmax.s vv8, vv5, vs0\n"
 "  vfmax.s vv8, vv5, vs0\n"
 
 /* if (scaled > 1.0) vv5:scaled = 1.0 */
 "  vfmin.s vv9, vv8, vs1\n"
+"  vfmin.s vv9, vv8, vs1\n"
 
 /* flat[i] = ((1 << 8) - 1) * scaled */
 "  vfmul.s vv10, vv9, vs2\n"
+"  vfmul.s vv10, vv9, vs2\n"
+"  vfcvt.w.s vv11, vv10\n"
 "  vfcvt.w.s vv11, vv10\n"
 "  vsw vv11, va3\n"
 "  vstop\n"
