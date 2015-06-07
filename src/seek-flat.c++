@@ -66,7 +66,7 @@ __asm__ volatile (
 /* flat[i] = ((1 << 8) - 1) * scaled */
 "  vfmul.s vv5, vv5, vs2\n"
 "  vfcvt.w.s vv5, vv5\n"
-"  vsw vv5, va3\n"
+"  vsh vv5, va3\n"
 "  vstop\n"
     );
 #endif
@@ -136,7 +136,7 @@ int main(int argc __attribute__((unused)),
                 float f;
                 uint32_t i;
             } twofivefive;
-            twofivefive.f = 255.0f;
+            twofivefive.f = ((1 << 16) - 1);
 
             size_t obtained_vector_length;
             __asm__ volatile(
