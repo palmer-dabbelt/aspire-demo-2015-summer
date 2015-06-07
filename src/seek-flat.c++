@@ -15,8 +15,6 @@
 
 #define SIZE (208 * 156)
 
-#include "hwacha-flat.h++"
-
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
 {
@@ -39,7 +37,15 @@ int main(int argc __attribute__((unused)),
                  SIZE * sizeof(*raw),
                  stdin);
 
-        flatten(flat, raw, hot, cold);
+        for (size_t i = 0; i < SIZE; ++i) {
+            auto max = hot[i];
+            auto min = cold[i];
+
+            auto scaled = (float)(raw[i] - min) / (max - min);
+            if (scaled > 1.0) scaled = 1.0;
+            if (scaled < 0.0) scaled = 0.0;
+            flat[i] = ((1 << 8) - 1) * scaled;
+        }
 
 #ifdef HAVE_FFPLAY
         fwriteall(&flat[0],
