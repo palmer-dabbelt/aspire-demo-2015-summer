@@ -11,22 +11,6 @@
 #define BUFFER_SIZE 4096
 #endif
 
-template<class T>
-T *aligned_alloc(size_t alignment, size_t count __attribute__((unused)), T *out)
-{
-    while ((((uintptr_t)out) % alignment) != 0)
-        out++;
-    return (T*)out;
-}
-
-
-template<class T>
-T *aligned_alloc(size_t alignment, size_t count)
-{
-    char *out = new char[sizeof(T) * count * 2];
-    return aligned_alloc(alignment, count, out);
-}
-
 #ifdef __riscv_hwacha4
 /* FIXME: This currently has to be marked as 'extern "C"' because
  * that's the only way I could find to do linkage here. */

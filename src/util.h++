@@ -3,6 +3,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <stdint.h>
 
 static inline void fwriteall(void *buf,
                              size_t count,
@@ -28,6 +29,21 @@ static inline void freadall(void *buf,
             abort();
         readed += out;
     }
+}
+
+template<class T>
+T *aligned_alloc(size_t alignment, size_t count __attribute__((unused)), T *out)
+{
+    while ((((uintptr_t)out) % alignment) != 0)
+        out++;
+    return (T*)out;
+}
+
+template<class T>
+T *aligned_alloc(size_t alignment, size_t count)
+{
+    char *out = new char[sizeof(T) * count * 2];
+    return aligned_alloc(alignment, count, out);
 }
 
 #endif
