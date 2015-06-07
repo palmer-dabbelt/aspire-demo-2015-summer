@@ -40,19 +40,19 @@ __asm__ volatile (
 /* vv0:raw[i] */
 /* vv2:cold[i] */
 /* vv3:offset = raw[i] - cold[i] */
-"  vlhu vv0, va0\n"
-"  vlhu vv2, va2\n"
+"  vlw vv0, va0\n"
+"  vlw vv2, va2\n"
 "  vsub vv3, vv2, vv0\n"
 
 /* vv4:scale = hot[i] - cold[i] */
-"  vlhu vv1, va1\n"
+"  vlw vv1, va1\n"
 "  vsub vv4, vv1, vv0\n"
 
 /* vv3:foffset = offset */
-"  vfcvt.s.l vv3, vv3\n"
+"  vfcvt.s.w vv3, vv3\n"
 
 /* vv4:fscale = scale */
-"  vfcvt.s.l vv4, vv4\n"
+"  vfcvt.s.w vv4, vv4\n"
 
 /* vv5:scaled = foffset / fscale */
 "  vfdiv.s vv5, vv3, vv4\n"
@@ -66,7 +66,7 @@ __asm__ volatile (
 /* flat[i] = ((1 << 8) - 1) * scaled */
 "  vfmul.s vv5, vv5, vs2\n"
 "  vfcvt.w.s vv5, vv5\n"
-"  vsh vv5, va3\n"
+"  vsw vv5, va3\n"
 "  vstop\n"
     );
 #endif
@@ -91,6 +91,18 @@ int main(int argc __attribute__((unused)),
     auto flat = aligned_alloc<uint16_t>(8, SIZE, &flat_storage[0]);
 
 #ifdef __riscv_hwacha4
+    uint32_t raw32_storage[SIZE + 64];
+    auto raw32 = aligned_alloc<uint32_t>(8, SIZE, &raw32_storage[0]);
+    uint32_t flat32_storage[SIZE + 64];
+    auto flat32 = aligned_alloc<uint32_t>(8, SIZE, &flat32_storage[0]);
+
+    /* Make sure all of memory has been paged in, since we're going to
+     * be loading from the text section. */
+    for (size_t i = 0; i < SIZE; ++i)
+        flat32[i] = raw32[i] = hot[i] + cold[i];
+#endif
+
+#ifdef __riscv_hwacha4
     /* We need a single configuration here  */
     size_t vector_length;
     __asm__ volatile (
@@ -100,11 +112,6 @@ int main(int argc __attribute__((unused)),
         : "r"(SIZE)
         );
 #endif
-
-    /* Make sure all of memory has been paged in, since we're going to
-     * be loading from the text section. */
-    for (size_t i = 0; i < SIZE; ++i)
-        flat[i] = raw[i] = hot[i] + cold[i];
 
     while (true) {
 #ifdef READ_FROM_INTERNAL_MEMORY
@@ -116,6 +123,9 @@ int main(int argc __attribute__((unused)),
 #endif
 
 #ifdef __riscv_hwacha4
+        for (size_t i = 0; i < SIZE; ++i)
+            raw32[i] = raw[i];
+
         for (size_t i = 0; i <= SIZE; i += vector_length) {
             if (SIZE == i)
                 continue;
@@ -159,8 +169,8 @@ int main(int argc __attribute__((unused)),
                 :
                 : "r"(cold + i),
                   "r"(hot + i),
-                  "r"(raw + i),
-                  "r"(flat + i),
+                  "r"(raw32 + i),
+                  "r"(flat32 + i),
                   "r"(zero.i),
                   "r"(one.i),
                   "r"(twofivefive.i),
@@ -172,6 +182,10 @@ int main(int argc __attribute__((unused)),
         __asm__ volatile(
             "fence\n"
             );
+
+        for (size_t i = 0; i < SIZE; ++i)
+            flat[i] = flat32[i];
+
 #else
         for (size_t i = 0; i < SIZE; ++i) {
             auto max = hot[i];
