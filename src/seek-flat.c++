@@ -196,7 +196,9 @@ int main(int argc __attribute__((unused)),
 #ifdef WRITE_TO_INTERNAL_MEMORY
         bool matching = true;
         for (int i = 0; i < SIZE; ++i) {
-            if (flat[i] != generate_flat_test::output[i]) {
+            if ((flat[i] != generate_flat_test::output[i])
+                && ((flat[i] + 1) != generate_flat_test::output[i])
+                && ((flat[i] - 1) != generate_flat_test::output[i])) {
                 printf("ERROR: memory doesn't match at %d: %d <> %d\n",
                        i, flat[i], generate_flat_test::output[i]);
                 matching = false;
