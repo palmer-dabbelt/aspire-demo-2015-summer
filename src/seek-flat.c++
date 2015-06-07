@@ -205,8 +205,10 @@ int main(int argc __attribute__((unused)),
             }
         }
 
+        printf("DONE\n");
         if (matching == false)
             abort();
+        printf("SUCCESS\n");
         return 0;
 #else
         fwriteall(&flat[0],
