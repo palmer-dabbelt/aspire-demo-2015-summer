@@ -8,7 +8,7 @@
 #include "colorspace.h++"
 #include "util.h++"
 
-static pixel_rgb32 rainbow(uint8_t input);
+static pixel_rgb32 rainbow(uint16_t input);
 
 int main(int argc __attribute__((unused)), 
          const char **argv __attribute__((unused)))
@@ -21,7 +21,7 @@ int main(int argc __attribute__((unused)),
     setbuf(stdin, NULL);
     setbuf(stdout, NULL);
 
-    auto ir = std::vector<uint8_t>(208 * 156);
+    auto ir = std::vector<uint16_t>(208 * 156);
     auto color = std::vector<pixel_rgb32>(208 * 156);
 
     while (true) {
@@ -52,12 +52,12 @@ int main(int argc __attribute__((unused)),
     return 0;
 }
 
-pixel_rgb32 rainbow(uint8_t input)
+pixel_rgb32 rainbow(uint16_t input)
 {
     pixel_rgb32 lo(0, 0, 255);
     pixel_rgb32 hi(255, 0, 0);
 
-    double lambda = input / 255.0;
+    double lambda = input / (double)((1 << 16) - 1);
 
     return ((lambda) * hi) + ((1 - lambda) * lo);
 }

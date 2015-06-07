@@ -66,7 +66,7 @@ __asm__ volatile (
 /* flat[i] = ((1 << 8) - 1) * scaled */
 "  vfmul.s vv5, vv5, vs2\n"
 "  vfcvt.w.s vv5, vv5\n"
-"  vsb vv5, va3\n"
+"  vsw vv5, va3\n"
 "  vstop\n"
     );
 #endif
@@ -78,17 +78,17 @@ int main(int argc __attribute__((unused)),
     auto hot  = generate_calibration::hot;
 
 #ifdef HAVE_FFPLAY
-    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray -loglevel quiet", "w");
+    auto ffplay = popen("ffplay -i - -f rawvideo -video_size 208x156 -pixel_format gray16le -loglevel quiet", "w");
     setbuf(ffplay, NULL);
 #endif
 
     setbuf(stdout, NULL);
     setbuf(stdin, NULL);
 
-    uint16_t raw_storage[SIZE*2];
+    uint16_t raw_storage[SIZE + 64];
     auto raw = aligned_alloc<uint16_t>(8, SIZE, &raw_storage[0]);
-    uint8_t flat_storage[SIZE*2 + 64];
-    auto flat = aligned_alloc<uint8_t>(8, SIZE*2, &flat_storage[0]);
+    uint16_t flat_storage[SIZE + 64];
+    auto flat = aligned_alloc<uint16_t>(8, SIZE, &flat_storage[0]);
 
 #ifdef __riscv_hwacha4
     /* We need a single configuration here  */
@@ -183,7 +183,7 @@ int main(int argc __attribute__((unused)),
             auto scaled = foffset / fscale;
             if (scaled > 1.0) scaled = 1.0;
             if (scaled < 0.0) scaled = 0.0;
-            flat[i] = ((1 << 8) - 1) * scaled;
+            flat[i] = ((1 << 16) - 1) * scaled;
         }
 #endif
 

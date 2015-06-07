@@ -30,10 +30,10 @@ cat <<EOF
 EOF
 
 cat <<EOF
-   uint8_t output[208*156 + 1] = {
+   uint16_t output[208*156 + 1] = {
 EOF
 
-  od -v -t x1 share/seek/flat-single-output.raw | grep ' ' | cut -d' ' -f2- | sed 's/ /, 0x/g' | sed 's/$/,/' | sed 's/^/0x/'
+  od -v -t x2 share/seek/flat-single-output.raw | grep ' ' | cut -d' ' -f2- | sed 's/ /, 0x/g' | sed 's/$/,/' | sed 's/^/0x/'
 
 cat <<EOF
    };
