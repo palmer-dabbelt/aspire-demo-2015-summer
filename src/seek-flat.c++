@@ -154,6 +154,7 @@ int main(int argc __attribute__((unused)),
                 "vmss vs0, %4\n"
                 "vmss vs1, %5\n"
                 "vmss vs2, %6\n"
+                "fence\n"
                 "vf 0(%7)\n"
                 :
                 : "r"(cold + i),
