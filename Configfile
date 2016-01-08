@@ -1,5 +1,5 @@
 LANGUAGES   += c++
-COMPILEOPTS += -std=c++11
+COMPILEOPTS += -std=c++0x
 COMPILEOPTS += -pedantic
 COMPILEOPTS += -Wall
 COMPILEOPTS += -Wextra

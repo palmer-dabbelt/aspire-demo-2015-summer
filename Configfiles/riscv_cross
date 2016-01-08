@@ -1,6 +1,10 @@
 #!/bin/bash
 
-cxx="$(which riscv64-unknown-elf-g++ 2> /dev/null)"
+riscv_gxx="$(which riscv-g++ 2> /dev/null)"
+riscv64_elf_gxx="$(which riscv64-unknown-elf-g++ 2> /dev/null)"
+riscv64_linux_gxx="$(which riscv64-unknown-linux-gnu-g++ 2> /dev/null)"
+
+cxx="$(echo $riscv64_linux_gxx $riscv64_elf_gxx $riscv_gxx | cut -d' ' -f1)"
 if [[ "$cxx" == "" ]]
 then
     echo "No RISC-V cross compiler detected, compiling natively" >&2
