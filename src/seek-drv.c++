@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <vector>
+#include <stdlib.h>
 
 #ifdef HAVE_SEEK
 #include <seek.hpp>
